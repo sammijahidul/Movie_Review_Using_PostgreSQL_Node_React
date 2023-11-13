@@ -1,8 +1,9 @@
-import dotenv from 'dotenv';
+import dotenv from 'dotenv'
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
-import query from './db/index.js';
+import userRouter from './routes/UserRoutes.js';
+
 
 dotenv.config();
 const app = express();
@@ -12,6 +13,8 @@ app.use(cors());
 app.use(morgan('tiny'));
 app.use(express.json());
 
+//routes
+app.use('/api/v1/user', userRouter);
 
 const PORT = process.env.PORT || 4002;
 
