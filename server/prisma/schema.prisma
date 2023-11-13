@@ -8,16 +8,59 @@ datasource db {
 }
 
 model User {
-  id         String   @id @default(uuid())
-  name       String   @db.VarChar(255)
-  email      String   @unique @db.VarChar(255)
-  password   String   @db.VarChar(255)
-  role       UserRole @default(normal)
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  id         String    @id @default(uuid())
+  name       String    @db.VarChar(255)
+  email      String    @unique @db.VarChar(255)
+  password   String    @db.VarChar(255)
+  role       UserRole  @default(normal)
+  movies     Movie[]
+  ratings    Rating[]
+  comments   Comment[]
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
 }
 
 enum UserRole {
   normal
   admin
+}
+
+model Movie {
+  id            Int       @id @default(autoincrement())
+  user          User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id       String
+  title         String    @db.VarChar(255)
+  released_year String    @db.VarChar(255)
+  likes         Int       @default(0)
+  dislikes      Int       @default(0)
+  rating        Rating[]
+  comment       Comment[]
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+}
+
+model Rating {
+  id         Int      @id @default(autoincrement())
+  user       User     @relation(fields: [user_id], references: [id])
+  user_id    String
+  movie      Movie    @relation(fields: [movie_id], references: [id], onDelete: Cascade)
+  movie_id   Int
+  value      Float
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@unique([user_id, movie_id])
+}
+
+model Comment {
+  id         Int      @id @default(autoincrement())
+  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id    String
+  movie      Movie    @relation(fields: [movie_id], references: [id], onDelete: Cascade)
+  movie_id   Int
+  body       String   @db.VarChar(255)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@unique([user_id, movie_id])
 }
