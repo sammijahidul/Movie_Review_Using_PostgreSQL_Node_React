@@ -1,6 +1,7 @@
 import prisma from "../db/db.config.js";
 import { comparePassword, hashPassword } from '../middlewares/authHelper.js';
 
+// Create a user --> Controller function to create a user
 export const userCreateController = async (req, res) => {
     try {
         const { name, email, password, role } = req.body;
@@ -47,6 +48,7 @@ export const userCreateController = async (req, res) => {
     }
 };
 
+// Get all user --> Controller function to fetch all user
 export const getAllUserController = async (req, res) => {
     try {
         const users = await prisma.user.findMany({})
@@ -71,4 +73,106 @@ export const getAllUserController = async (req, res) => {
             message: "Error while getting all user"
         })       
     }
+};
+
+// Get a user --> Controller function to fetch a user
+export const getAUserController = async (req, res) => {
+    try {
+        const user_id = req.params.id;
+        const user = await prisma.user.findFirst({
+            where: {
+                id: user_id
+            }
+        });
+
+        if(!user) {
+            return res.status(400).json({
+                message: "Not found a user by this id"
+            })
+        } else {
+            res.status(200).json({
+                status: 'success',
+                data: {
+                    user
+                }
+            })
+        }       
+    } 
+    catch (error) {
+        console.error(error);
+        res.status(500).json({
+            status: 'failed',
+            message: "Error while fetching this user"
+        })       
+    }
+};
+
+// Update a user --> Controller function to update a user
+export const updateAUserController = async (req, res) => {
+    try {
+        const user_id = req.params.id;
+        const { name, email, password } = req.body;
+        if (email) {
+            const usedEmail = await prisma.user.findUnique({ where: {email: email }})
+            if (usedEmail) {
+                return res.status(400).json({
+                    message: "This email alreay in used"
+                });
+            }
+        }
+        
+        const hashedPassword = password ? await hashPassword(password) : undefined;
+        const updateUser = await prisma.user.update({
+            where: { id: user_id },
+            data: {
+                name,
+                email,
+                password: hashedPassword
+            }
+        })
+        if(!updateUser) {
+            return res.status(400).json({
+                message: "No user exist by this Id"
+            })
+        };
+
+        res.status(200).json({
+            status: 'success',
+            message: "User information updated"
+        })
+    } 
+    catch (error) {
+        console.error(error);
+        res.status(500).json({
+            status: 'failed',
+            message: "Error while update this user"
+        })
+    }
+};
+
+// Delete a user --> Controller function to delete a user
+export const deleteAUserController = async (req, res) => {
+    try {
+        const user_id = req.params.id;
+        const findUser = await prisma.user.findFirst({ where: { id: user_id }})
+        if (!findUser) {
+            return res.status(404).json({
+                message: "No user found by this id"
+            });           
+        }
+
+        await prisma.user.delete({ where: { id: user_id}})
+        res.status(200).json({
+            status: 'success',
+            message: "User deleted successfully"
+        })       
+    } 
+    catch (error) {
+        console.error(error);
+        res.status(500).json({
+            status: 'failed',
+            message: "Error while delete the user"
+        })       
+    }
 }
+
