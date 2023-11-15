@@ -112,15 +112,16 @@ export const updateAUserController = async (req, res) => {
     try {
         const user_id = req.params.id;
         const { name, email, password } = req.body;
+        // Because email is unique that's why checking if the new email or updated email exist in database
         if (email) {
             const usedEmail = await prisma.user.findUnique({ where: {email: email }})
             if (usedEmail) {
                 return res.status(400).json({
-                    message: "This email alreay in used"
+                    message: "This email alreay in use"
                 });
             }
         }
-        
+        // Password will be hashed again if user update the password
         const hashedPassword = password ? await hashPassword(password) : undefined;
         const updateUser = await prisma.user.update({
             where: { id: user_id },
@@ -154,13 +155,14 @@ export const updateAUserController = async (req, res) => {
 export const deleteAUserController = async (req, res) => {
     try {
         const user_id = req.params.id;
+        //Check whether a user by this id exist or not in database
         const findUser = await prisma.user.findFirst({ where: { id: user_id }})
         if (!findUser) {
             return res.status(404).json({
                 message: "No user found by this id"
             });           
         }
-
+        // If the user is exist now it will delete 
         await prisma.user.delete({ where: { id: user_id}})
         res.status(200).json({
             status: 'success',
