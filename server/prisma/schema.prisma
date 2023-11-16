@@ -41,7 +41,7 @@ model Movie {
 
 model Rating {
   id         Int      @id @default(autoincrement())
-  user       User     @relation(fields: [user_id], references: [id])
+  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
   user_id    String
   movie      Movie    @relation(fields: [movie_id], references: [id], onDelete: Cascade)
   movie_id   Int

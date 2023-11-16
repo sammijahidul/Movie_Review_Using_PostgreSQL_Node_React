@@ -4,7 +4,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 import userRouter from './routes/UserRoutes.js';
 import movieRouter from './routes/MovieRoutes.js';
-
+import ratingRouter from './routes/RattingRoutes.js'
 
 dotenv.config();
 const app = express();
@@ -17,6 +17,7 @@ app.use(express.json());
 //routes
 app.use('/api/v1/user', userRouter);
 app.use('/api/v1/movie', movieRouter);
+app.use('/api/v1/movieRating', ratingRouter);
 
 const PORT = process.env.PORT || 4002;
 

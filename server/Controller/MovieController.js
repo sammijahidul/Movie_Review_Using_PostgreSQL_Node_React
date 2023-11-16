@@ -1,6 +1,5 @@
 import prisma from "../db/db.config.js";
 
-
 // Create a movie --> Controller function to create a movie
 export const createAMovieController = async (req, res) => {
     try {
