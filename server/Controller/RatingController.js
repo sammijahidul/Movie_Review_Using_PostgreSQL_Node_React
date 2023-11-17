@@ -1,4 +1,5 @@
 import prisma from "../db/db.config.js";
+import { updateAverageRatingController } from '../middlewares/avgRating.js';
 
 // Creating a movie Rating --> Controller function to create a rating 
 export const createRatingController = async (req, res) => {
@@ -16,6 +17,10 @@ export const createRatingController = async (req, res) => {
                 value
             }
         });
+        
+        // This will update average movie rating
+        await updateAverageRatingController(Number(movie_id));
+
         res.status(201).json({
             status: 'success',
             data: {
@@ -119,6 +124,9 @@ export const updateARatingController = async (req, res) => {
             }
         });
 
+        // This will update average movie rating
+        await updateAverageRatingController(Number(movie_id));
+
         res.status(200).json({
             status: 'success',
             message: 'Updated Successfully',
@@ -140,10 +148,11 @@ export const updateARatingController = async (req, res) => {
 export const deleteARatingController = async (req, res) => {
     try {
         const rating_id = req.params.id;
-        const findRating = await prisma.rating.findFirst({
+        const findRating = await prisma.rating.findUnique({
             where: {
                 id: Number(rating_id)
-            }
+            },
+            select: { movie: { select: { id: true } } },
         });
 
         if (!findRating) {
@@ -157,6 +166,9 @@ export const deleteARatingController = async (req, res) => {
                 id: Number(rating_id)
             }
         });
+
+        // This will update average movie rating
+        await updateAverageRatingController(findRating.movie.id);
 
         res.status(200).json({
             status: 'success',
@@ -174,3 +186,4 @@ export const deleteARatingController = async (req, res) => {
         })        
     }
 };
+

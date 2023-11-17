@@ -10,4 +10,5 @@ router.get('/fetch/rating/:id', gettingARatingController);
 router.patch('/update/rating/:id', updateARatingController);
 router.delete('/remove/rating/:id', deleteARatingController);
 
+
 export default router;

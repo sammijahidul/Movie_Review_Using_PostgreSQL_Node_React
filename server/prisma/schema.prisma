@@ -35,6 +35,7 @@ model Movie {
   dislikes      Int       @default(0)
   rating        Rating[]
   comment       Comment[]
+  averageRating Float?
   created_at    DateTime  @default(now())
   updated_at    DateTime  @updatedAt
 }

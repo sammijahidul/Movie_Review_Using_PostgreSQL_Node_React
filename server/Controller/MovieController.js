@@ -167,4 +167,47 @@ export const deleteAMovieController = async (req, res) => {
             message: "Error while deleting the movie"
         })        
     }
+};
+
+// Get all rating for a movie --> Controller function to fetch all ratings for a particular movie
+export const getAllRatingForAMovieController = async (req, res) => {
+    try {
+        const { movie_id } = req.params;
+        const movieRatings = await prisma.movie.findUnique({
+            where: {
+                id: Number(movie_id)
+            },
+            include: {
+                rating: {
+                    include: {
+                        user: true
+                    }
+                }
+            }
+        });
+
+        if (!movieRatings) {
+            return res.status(404).json({
+                message: "Movie not found"
+            })
+        };
+
+        const ratings = movieRatings.rating;
+        res.status(200).json({
+            status: 'sucess',
+            data: {
+                ratings
+            }
+        })       
+    } 
+    catch (error) {
+        console.error(error);
+        res.status(500).json({
+            status: 'failed',
+            message: "Error while getting ratings"
+        })
+        
+    }
 }
+
+
