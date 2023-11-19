@@ -1,20 +1,21 @@
 import express from 'express';
 import { 
-    createAMovieController, 
-    deleteAMovieController, 
+    createMovieController, 
+    deleteMovieController, 
     getAMovieController, 
-    getAllMoviesController, 
     getAllRatingForAMovieController, 
-    updateAMovieController 
-} from '../Controller/MovieController.js';
+    getMoviesController,
+    updateMovieController, 
+} 
+   from '../Controller/MovieController.js';
 
 const router = express.Router();
 
-router.post('/create', createAMovieController);
-router.get('/fetch/movies', getAllMoviesController);
+router.post('/create', createMovieController);
+router.get('/fetch/movies', getMoviesController);
 router.get('/fetch/:id', getAMovieController);
-router.patch('/modify/:id', updateAMovieController);
-router.delete('/remove/:id', deleteAMovieController);
+router.patch('/modify/:id', updateMovieController);
+router.delete('/remove/:id', deleteMovieController);
 router.get('/fetch/:movie_id/ratings', getAllRatingForAMovieController);
 
 

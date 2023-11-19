@@ -1,7 +1,7 @@
 import prisma from "../db/db.config.js";
 
 // Create a movie --> Controller function to create a movie
-export const createAMovieController = async (req, res) => {
+export const createMovieController = async (req, res) => {
     try {
         const {user_id, title, released_year, likes, dislikes} = req.body;
 
@@ -51,7 +51,7 @@ export const createAMovieController = async (req, res) => {
 };
 
 // Get all movies --> Controller function to fetch users
-export const getAllMoviesController = async (req, res) => {
+export const getMoviesController = async (req, res) => {
     try {
         const movies = await prisma.movie.findMany({})
         if(movies.length === 0) {
@@ -106,7 +106,7 @@ export const getAMovieController = async (req, res) => {
 };
 
 // Update a movie --> Controller function to update a movie
-export const updateAMovieController = async (req, res) => {
+export const updateMovieController = async (req, res) => {
     try {
         const movie_id = req.params.id;
         const {user_id, title, released_year, likes, dislikes} = req.body;
@@ -145,7 +145,7 @@ export const updateAMovieController = async (req, res) => {
 };
 
 // Delete a movie --> Controller function to delete a movie
-export const deleteAMovieController = async (req, res) => {
+export const deleteMovieController = async (req, res) => {
     try {
         const movie_id = req.params.id;
         const movie = await prisma.movie.findFirst({ where: { id: Number(movie_id) }});
@@ -208,6 +208,8 @@ export const getAllRatingForAMovieController = async (req, res) => {
         })
         
     }
-}
+};
+
+// Get all comments for a movie --> Controller function to fetch all comments for a particular movie
 
 
