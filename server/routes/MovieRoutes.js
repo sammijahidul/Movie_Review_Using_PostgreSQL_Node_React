@@ -2,8 +2,9 @@ import express from 'express';
 import { 
     createMovieController, 
     deleteMovieController, 
-    getAMovieController, 
-    getAllRatingForAMovieController, 
+    getAMovieController,    
+    getAllCommentsOnMovieController,    
+    getAllRatingsOnMovieController,   
     getMoviesController,
     updateMovieController, 
 } 
@@ -16,7 +17,8 @@ router.get('/fetch/movies', getMoviesController);
 router.get('/fetch/:id', getAMovieController);
 router.patch('/modify/:id', updateMovieController);
 router.delete('/remove/:id', deleteMovieController);
-router.get('/fetch/:movie_id/ratings', getAllRatingForAMovieController);
+router.get('/fetch/ratings/:movie_id', getAllRatingsOnMovieController);
+router.get('/fetch/comments/:movie_id', getAllCommentsOnMovieController);
 
 
 export default router;

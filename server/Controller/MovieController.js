@@ -170,7 +170,7 @@ export const deleteMovieController = async (req, res) => {
 };
 
 // Get all rating for a movie --> Controller function to fetch all ratings for a particular movie
-export const getAllRatingForAMovieController = async (req, res) => {
+export const getAllRatingsOnMovieController = async (req, res) => {
     try {
         const { movie_id } = req.params;
         const movieRatings = await prisma.movie.findUnique({
@@ -211,5 +211,43 @@ export const getAllRatingForAMovieController = async (req, res) => {
 };
 
 // Get all comments for a movie --> Controller function to fetch all comments for a particular movie
+export const getAllCommentsOnMovieController = async (req, res) => {
+    try {
+        const {movie_id} = req.params;
+        const movieComments = await prisma.movie.findUnique({
+            where: {
+                id: Number(movie_id)
+            },
+            include: {
+                comment: {
+                    include: {
+                        user: true
+                    }
+                }
+            }
+        });
 
+        if (!movieComments) {
+            return res.status(404).json({
+                message: "Movie not found"
+            })
+        }
+
+        const comments = movieComments.comment;
+        res.status(200).json({
+            status: 'sucess',
+            data: {
+                comments
+            }
+        });              
+    } 
+    catch (error) {
+        console.error(error);
+        res.status(500).json({
+            status: 'failed',
+            message: "Error while getting comments"
+        })
+       
+    }
+}
 
