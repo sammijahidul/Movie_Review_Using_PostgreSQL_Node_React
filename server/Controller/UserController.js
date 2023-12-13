@@ -70,7 +70,7 @@ export const getAllUserController = async (req, res) => {
         console.error(error);
         res.status(500).json({
             status: 'failed',
-            message: "Error while getting all user"
+            message: "Error while getting users"
         })       
     }
 };
